@@ -1,5 +1,6 @@
 import Phaser from "phaser"
 import {Animes, Scenes, Textures} from "../consts/Global"
+import RocketMouse from "../game/RocketMouse"
 
 export default class Game extends Phaser.Scene {
 
@@ -34,11 +35,10 @@ export default class Game extends Phaser.Scene {
         this.bookc1se = this.add.image(Phaser.Math.Between(0, width), height-256, Textures.Bookc1se)
         this.bookc2se = this.add.image(Phaser.Math.Between(width, 2*width), height-350, Textures.Bookc2se)
 
-        const mouse = this.physics.add.sprite(width/3, height-48, Textures.RocketMouse,
-            "rocketmouse_fly01.png").setOrigin(0.5, 1).play(Animes.Run)
-        const body = mouse.body as Phaser.Physics.Arcade.Body
-        body.setCollideWorldBounds(true)
-        body.setVelocityX(512)
+        // const mouse = this.physics.add.sprite(width/3, height-48, Textures.RocketMouse,
+        //     "rocketmouse_fly01.png").setOrigin(0.5, 1).play(Animes.Run)
+        const mouse = new RocketMouse(this, width/3, height/2)
+        this.add.existing(mouse)
         
         this.physics.world.setBounds(0, 0, Number.MAX_SAFE_INTEGER, height*0.94)
         
