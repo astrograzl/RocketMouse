@@ -13,6 +13,8 @@ export default class Boot extends Phaser.Scene {
         this.load.image(Textures.W2ndow, "images/object_window2.png")
         this.load.image(Textures.Bookc1se, "images/object_bookcase1.png")
         this.load.image(Textures.Bookc2se, "images/object_bookcase2.png")
+        this.load.image(Textures.Laser, "images/object_laser.png")
+        this.load.image(Textures.Stop, "images/object_laser_end.png")
     }
 
     create() {
@@ -21,11 +23,13 @@ export default class Boot extends Phaser.Scene {
             frames: this.anims.generateFrameNames(Textures.RocketMouse, {
                 start: 1, end: 4, prefix: "rocketmouse_run", zeroPad: 2, suffix: ".png"}),
             frameRate: 10, repeat: -1})
+        
         this.anims.create({
             key: Animes.Jet,
             frames: this.anims.generateFrameNames(Textures.RocketMouse, {
                 start: 1, end: 2, prefix: "flame", suffix: ".png"}),
             frameRate: 10, repeat: -1})
+        
         this.anims.create({
             key: Animes.Fly,
             frames: [{
@@ -33,6 +37,7 @@ export default class Boot extends Phaser.Scene {
                 frame: "rocketmouse_fly01.png"
             }]
         })
+        
         this.anims.create({
             key: Animes.Fall,
             frames: [{
@@ -40,5 +45,12 @@ export default class Boot extends Phaser.Scene {
                 frame: "rocketmouse_fall01.png"
             }]
         })
+        
+        this.anims.create({
+            key: Animes.Dead,
+            frames: this.anims.generateFrameNames(Textures.RocketMouse, {
+                start: 1, end: 2, prefix: "rocketmouse_dead", zeroPad: 2, suffix: ".png"}),
+                frameRate: 10})
+        
         this.scene.start(Scenes.Game)}
 }
