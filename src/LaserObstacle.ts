@@ -1,5 +1,5 @@
 import Phaser from "phaser"
-import {Textures} from "../consts/Global"
+import {Textures} from "./Global"
 
 export default class LaserObstacle extends Phaser.GameObjects.Container {
     constructor(scene: Phaser.Scene, x: number, y: number) {

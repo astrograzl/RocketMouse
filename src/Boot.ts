@@ -1,20 +1,20 @@
 import Phaser from "phaser"
-import {Animes, Scenes, Textures} from "../consts/Global"
+import {Animes, Scenes, Textures} from "./Global"
 
 export default class Boot extends Phaser.Scene {
 
     constructor() {super(Scenes.Boot)}
 
     preload() {
-        this.load.image(Textures.Background, "images/bg_repeat_340x640.png")
         this.load.atlas(Textures.RocketMouse, "rocket-mouse.png", "rocket-mouse.json")
-        this.load.image(Textures.MouseHole, "images/object_mousehole.png")
-        this.load.image(Textures.W1ndow, "images/object_window1.png")
-        this.load.image(Textures.W2ndow, "images/object_window2.png")
-        this.load.image(Textures.Bookc1se, "images/object_bookcase1.png")
-        this.load.image(Textures.Bookc2se, "images/object_bookcase2.png")
-        this.load.image(Textures.Laser, "images/object_laser.png")
-        this.load.image(Textures.Stop, "images/object_laser_end.png")
+        this.load.image(Textures.Background, "bg_repeat_340x640.png")
+        this.load.image(Textures.MouseHole, "object_mousehole.png")
+        this.load.image(Textures.Bookc1se, "object_bookcase1.png")
+        this.load.image(Textures.Bookc2se, "object_bookcase2.png")
+        this.load.image(Textures.W1ndow, "object_window1.png")
+        this.load.image(Textures.W2ndow, "object_window2.png")
+        this.load.image(Textures.Stop, "object_laser_end.png")
+        this.load.image(Textures.Laser, "object_laser.png")
     }
 
     create() {
@@ -52,5 +52,6 @@ export default class Boot extends Phaser.Scene {
                 start: 1, end: 2, prefix: "rocketmouse_dead", zeroPad: 2, suffix: ".png"}),
                 frameRate: 10})
         
-        this.scene.start(Scenes.Game)}
+        this.scene.start(Scenes.Game)
+    }
 }

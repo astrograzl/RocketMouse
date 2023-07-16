@@ -1,8 +1,9 @@
 import Phaser from 'phaser'
 
-import Boot from "./scenes/Boot"
-import Game from "./scenes/Game"
-import HelloWorld from './scenes/HelloWorld'
+import Boot from "./Boot"
+import Game from "./Game"
+import GameOver from "./GameOver"
+import HelloWorld from './HelloWorld'
 
 const config: Phaser.Types.Core.GameConfig = {
 	type: Phaser.AUTO,
@@ -16,7 +17,7 @@ const config: Phaser.Types.Core.GameConfig = {
 			debug: true,
 		},
 	},
-	scene: [Boot, Game, HelloWorld],
+	scene: [Boot, Game, GameOver, HelloWorld],
 }
 
 export default new Phaser.Game(config)

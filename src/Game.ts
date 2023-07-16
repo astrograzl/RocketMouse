@@ -1,7 +1,7 @@
 import Phaser from "phaser"
-import {Scenes, Textures} from "../consts/Global"
-import RocketMouse from "../game/RocketMouse"
-import LaserObstacle from "../game/LaserObstacle"
+import {Scenes, Textures} from "./Global"
+import LaserObstacle from "./LaserObstacle"
+import RocketMouse from "./RocketMouse"
 
 export default class Game extends Phaser.Scene {
 
@@ -19,12 +19,13 @@ export default class Game extends Phaser.Scene {
     preload() {}
     
     create() {
-        const width = this.scale.width
-        const height = this.scale.height
+        const {width, height} = this.scale // object destructuring
 
         // this.add.image(0, 0, "background").setOrigin(0)
         this.background = this.add.tileSprite(0, 0, width, height, Textures.Background)
                                     .setOrigin(0, 0).setScrollFactor(0, 0)
+                                    
+        this.mouseHole = this.add.image(Phaser.Math.Between(0, width), height-136, Textures.MouseHole)
         
         this.w1ndow = this.add.image(Phaser.Math.Between(0, width),
                                     Phaser.Math.Between(height/4, height/3),
@@ -32,12 +33,10 @@ export default class Game extends Phaser.Scene {
         this.w2ndow = this.add.image(Phaser.Math.Between(width, 2*width),
                                     Phaser.Math.Between(height/4, height/3),
                                     Textures.W2ndow)
-                                    
-        this.mouseHole = this.add.image(Phaser.Math.Between(0, width), height-136, Textures.MouseHole)
         
         this.bookc1se = this.add.image(Phaser.Math.Between(0, width), height-256, Textures.Bookc1se)
         this.bookc2se = this.add.image(Phaser.Math.Between(width, 2*width), height-350, Textures.Bookc2se)
-
+        
         // const mouse = this.physics.add.sprite(width/3, height-48, Textures.RocketMouse,
         //     "rocketmouse_fly01.png").setOrigin(0.5, 1).play(Animes.Run)
         this.mouse = new RocketMouse(this, width/3, height)
@@ -59,20 +58,16 @@ export default class Game extends Phaser.Scene {
         this.wall()
     }
 
-    zipzap() {
-        console.log("Bzzz")
-        this.mouse.death()
-    }
+    zipzap() {this.mouse.death()}
 
     wall() {
-        const width = this.scale.width
-        const height = this.scale.height
+        const {width, height} = this.scale
         const camX = this.cameras.main.scrollX
 
         if (this.mouseHole.x + this.mouseHole.width < camX)
             this.mouseHole.x = Phaser.Math.Between(camX + width, camX + 2*width)
         
-            if (this.w1ndow.x + this.w1ndow.width < camX) {
+        if (this.w1ndow.x + this.w1ndow.width < camX) {
             this.w1ndow.x = Phaser.Math.Between(this.w2ndow.x + width, this.w2ndow.x + 2*width)
             this.w1ndow.y = Phaser.Math.Between(height/4, height/3)
         }
@@ -91,7 +86,7 @@ export default class Game extends Phaser.Scene {
         const laser = this.laser.body as Phaser.Physics.Arcade.StaticBody
         if (this.laser.x + laser.width < camX) {
             this.laser.x = Phaser.Math.Between(this.laser.x + width, this.laser.x + 2*width)
-            this.laser.y = Phaser.Math.Between(0, 2*height/3)
+            this.laser.y = Phaser.Math.Between(0, height/2)
             laser.position.x = this.laser.x + laser.offset.x
             laser.position.y = this.laser.y
         }
