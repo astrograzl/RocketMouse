@@ -11,12 +11,16 @@ export default class Game extends Phaser.Scene {
     private w2ndow!: Phaser.GameObjects.Image
     private bookc1se!: Phaser.GameObjects.Image
     private bookc2se!: Phaser.GameObjects.Image
+    private coins!: Phaser.Physics.Arcade.StaticGroup
     private laser!: LaserObstacle
     private mouse!: RocketMouse
+    private score = 0
 
     constructor() {super(Scenes.Game)}
+
+    init() {this.score = 0}
     
-    preload() {}
+    preload() {/* Booting */}
     
     create() {
         const {width, height} = this.scale // object destructuring
@@ -44,21 +48,54 @@ export default class Game extends Phaser.Scene {
         
         this.laser = new LaserObstacle(this, 3*width/5, height/10)
         this.add.existing(this.laser)
+
+        this.coins = this.physics.add.staticGroup()
         
-        this.physics.world.setBounds(0, 0, Number.MAX_SAFE_INTEGER, height*0.94)
-        this.physics.add.overlap(this.laser, this.mouse, this.zipzap, undefined, this)
+        this.physics.world.setBounds(0, 48, Number.MAX_SAFE_INTEGER, height-96)
+        this.physics.add.overlap(this.mouse, this.laser, this.zipzap, undefined, this)
+        this.physics.add.overlap(this.mouse, this.coins, this.jingle, undefined, this)
 
         this.cameras.main.setBounds(0, 0, Number.MAX_SAFE_INTEGER, height)
         this.cameras.main.startFollow(this.mouse)
     }
 
-    update(t: number, dt: number) {
+    update() {
         this.background.setTilePosition(this.cameras.main.scrollX)
-        if (t % 1001 == 1) console.log(t, dt)
+        this.laser.flash()
         this.wall()
     }
 
     zipzap() {this.mouse.death()}
+
+    private jingle(o1: Phaser.GameObjects.GameObject, o2: Phaser.GameObjects.GameObject) {
+        const coin = o2 as Phaser.Physics.Arcade.Sprite
+        this.coins.killAndHide(coin)
+        coin.body.enable = false
+        console.log(++this.score)
+    }
+
+    coinsCast() {
+        this.coins.children.each(child => {
+            const coin = child as Phaser.Physics.Arcade.Sprite
+            this.coins.killAndHide(coin)
+            coin.body.enable = false
+        })
+        const {width, height} = this.scale
+        const camX = this.cameras.main.scrollX
+        const numero = Phaser.Math.Between(1, 10)
+        let x = camX + width
+        let y = 0.9 * height
+        for (let i = 0; i < numero; ++i) {
+            const coin = this.coins.get(x, y, Textures.Coin) as Phaser.Physics.Arcade.Sprite
+            coin.setVisible(true)
+            coin.setActive(true)
+            // const body = coin.body as Phaser.Physics.Arcade.StaticBody
+            coin.body.setCircle(coin.body.width/2)
+            coin.body.enable = true
+            coin.body.updateFromGameObject()
+            x += 1.62 * coin.width
+        }
+    }
 
     wall() {
         const {width, height} = this.scale
@@ -80,8 +117,10 @@ export default class Game extends Phaser.Scene {
         if (this.bookc1se.x + this.bookc1se.width < camX)
             this.bookc1se.x = Phaser.Math.Between(this.bookc2se.x + width, this.bookc2se.x + 2*width)
         
-        if (this.bookc2se.x + this.bookc2se.width < camX)
+        if (this.bookc2se.x + this.bookc2se.width < camX) {
             this.bookc2se.x = Phaser.Math.Between(this.bookc1se.x + width, this.bookc1se.x + 2*width)
+            this.coinsCast()
+        }
         
         const laser = this.laser.body as Phaser.Physics.Arcade.StaticBody
         if (this.laser.x + laser.width < camX) {

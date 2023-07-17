@@ -25,6 +25,7 @@ enum Textures {
     W2ndow = "w2ndow",
     Laser = "laser",
     Stop = "stop",
+    Coin = "coin",
 }
 
 enum Mouse {

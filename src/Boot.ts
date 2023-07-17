@@ -15,6 +15,7 @@ export default class Boot extends Phaser.Scene {
         this.load.image(Textures.W2ndow, "object_window2.png")
         this.load.image(Textures.Stop, "object_laser_end.png")
         this.load.image(Textures.Laser, "object_laser.png")
+        this.load.image(Textures.Coin, "object_coin.png")
     }
 
     create() {

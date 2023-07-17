@@ -7,18 +7,19 @@ export default class LaserObstacle extends Phaser.GameObjects.Container {
         scene.physics.add.existing(this, true)
         const body = this.body as Phaser.Physics.Arcade.StaticBody
         const top = scene.add.image(0, 0, Textures.Stop).setOrigin(0.5, 0)
-        const middle = scene.add.image(0, top.y+top.displayHeight, Textures.Laser).setOrigin(0.5, 0)
-        middle.setDisplaySize(middle.width, 128)
-        const bottom = scene.add.image(0, middle.y+middle.displayHeight, Textures.Stop)
-        .setOrigin(0.5, 0).setFlipY(true)
-        const width = top.displayWidth
-        const height = 2*top.displayHeight + middle.displayHeight
+        const laser = scene.add.image(0, top.y+top.displayHeight, Textures.Laser).setOrigin(0.5, 0)
+        laser.setDisplaySize(laser.width, 128)
+        const bottom = scene.add.image(0, laser.y+laser.displayHeight, Textures.Stop)
+                                .setOrigin(0.5, 0).setFlipY(true)
+        const width = laser.displayWidth
+        const height = 2*top.displayHeight + laser.displayHeight
         body.setSize(width, height)
         body.setOffset(-width/2, 0)
         body.position.x = this.x + body.offset.x
         body.position.y = this.y
         this.add(top)
-        this.add(middle)
+        this.add(laser)
         this.add(bottom)
     }
+    flash() {this.setVisible(!this.visible)}
 }

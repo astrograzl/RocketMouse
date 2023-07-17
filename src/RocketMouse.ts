@@ -16,8 +16,8 @@ export default class RocketMouse extends Phaser.GameObjects.Container {
         this.flames = scene.add.sprite(-63, -15, Textures.RocketMouse).play(Animes.Jet)
         this.mouse = scene.add.sprite(0, 0, Textures.RocketMouse).play(Animes.Run).setOrigin(0.5, 1)
         const body = this.body as Phaser.Physics.Arcade.Body
-        body.setOffset(-0.5*this.mouse.width, -this.mouse.height)
-        body.setSize(this.mouse.width, this.mouse.height)
+        body.setSize(this.mouse.width/2, this.mouse.height/2)
+        body.setOffset(-this.mouse.width/4, -2*this.mouse.height/3)
         body.setCollideWorldBounds(true)
         body.setVelocityX(512) // run
         this.add(this.flames)
