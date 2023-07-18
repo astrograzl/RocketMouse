@@ -8,9 +8,10 @@ export default class RocketMouse extends Phaser.GameObjects.Container {
     private mouse: Phaser.GameObjects.Sprite
     private being = Mouse.Running
     /* TODO: private energy: number */
+    public score = 1000
 
     constructor(scene: Phaser.Scene, x: number, y: number) {
-        super(scene, x, y)
+        super(scene, x, y); console.log("Rocket Mousse")
         scene.physics.add.existing(this)
         this.cursor = scene.input.keyboard.createCursorKeys()
         this.flames = scene.add.sprite(-63, -15, Textures.RocketMouse).play(Animes.Jet)
@@ -25,45 +26,56 @@ export default class RocketMouse extends Phaser.GameObjects.Container {
         this.jetpack(false)
     }
 
-    jetpack(on: boolean) {this.flames.setVisible(on)}
+    jetpack(on: boolean) {
+        const body = this.body as Phaser.Physics.Arcade.Body
+        if (on && this.score > 0) {
+            body.setAcceleration(128, -512)
+            this.mouse.play(Animes.Fly, true)
+            this.flames.setVisible(true)
+            this.score--
+        } else {
+            body.setAcceleration(0, 0)
+            this.flames.setVisible(false)
+        }
+    }
 
-    death() {if (this.being != Mouse.Dead) this.being = Mouse.Killed}
+    death() {console.log("+")
+        if (this.being == Mouse.Dead) return
+        const body = this.body as Phaser.Physics.Arcade.Body
+        body.setVelocityX(body.velocity.x-10)
+        body.setAcceleration(0, 0)
+        this.mouse.play(Animes.Dead)
+        this.being = Mouse.Killed
+        this.jetpack(false)
+    }
 
     preUpdate() {
-        const body = this.body as Phaser.Physics.Arcade.Body
-        
+        const body = this.body as Phaser.Physics.Arcade.Body        
         switch (this.being) {
             case Mouse.Dead: { // Let dead rest in peace
+                // this.scene.scene.stop(Scenes.Game)
                 this.scene.scene.run(Scenes.GameOver)
             } break /* FIXME */
             
             case Mouse.Killed: {
-                this.jetpack(false)
-                this.mouse.play(Animes.Dead)
-                body.setVelocityX(body.velocity.x-10)
                 if (body.velocity.x < 10) {
                     body.setVelocity(0, 0)
-                    body.setAcceleration(0, 0)
                     this.being = Mouse.Dead
                     console.log("Rest in Peace")
-                } else {
-                    this.being = Mouse.Running
-                    console.log("Zip Zap Zop")
+                } else { // Slowly fall on the ground
+                    if (body.blocked.down) {this.being = Mouse.Running}
                 }
             } break
             
             case Mouse.Running: {
-                if (body.blocked.down) {
-                    this.mouse.play(Animes.Run, true)
-                } else if (body.velocity.y > 0) this.mouse.play(Animes.Fall, true)
-                if (this.cursor.space?.isDown) {
-                    this.jetpack(true)
-                    body.setAcceleration(100, -600)
-                    this.mouse.play(Animes.Fly, true)
-                } else {
-                    this.jetpack(false)
-                    body.setAcceleration(0, 0)
-                }
+                if (body.blocked.up) {
+                    this.death()
+                    return
+                } /* There is a reason for a helmet when flying */
+                if (body.blocked.down) this.mouse.play(Animes.Run, true)
+                else if (body.velocity.y > 0) this.mouse.play(Animes.Fall, true)
+                if (this.cursor.space?.isDown) this.jetpack(true)
+                else this.jetpack(false)
             } break
         }
     }

@@ -14,11 +14,10 @@ export default class Game extends Phaser.Scene {
     private coins!: Phaser.Physics.Arcade.StaticGroup
     private laser!: LaserObstacle
     private mouse!: RocketMouse
-    private score = 0
 
     constructor() {super(Scenes.Game)}
 
-    init() {this.score = 0}
+    init() {/* Void */}
     
     preload() {/* Booting */}
     
@@ -39,8 +38,10 @@ export default class Game extends Phaser.Scene {
                                     Textures.W2ndow)
         
         this.bookc1se = this.add.image(Phaser.Math.Between(0, width), height-256, Textures.Bookc1se)
+        // let the cat be
         this.bookc2se = this.add.image(Phaser.Math.Between(width, 2*width), height-350, Textures.Bookc2se)
-        
+        // beware of the dog
+
         // const mouse = this.physics.add.sprite(width/3, height-48, Textures.RocketMouse,
         //     "rocketmouse_fly01.png").setOrigin(0.5, 1).play(Animes.Run)
         this.mouse = new RocketMouse(this, width/3, height)
@@ -59,19 +60,21 @@ export default class Game extends Phaser.Scene {
         this.cameras.main.startFollow(this.mouse)
     }
 
-    update() {
+    update() {console.log(this.mouse.score)
         this.background.setTilePosition(this.cameras.main.scrollX)
         this.laser.flash()
         this.wall()
     }
 
-    zipzap() {this.mouse.death()}
+    zipzap() {console.log("~")
+        this.mouse.death()
+    }
 
-    private jingle(o1: Phaser.GameObjects.GameObject, o2: Phaser.GameObjects.GameObject) {
+    jingle(o1: Phaser.GameObjects.GameObject, o2: Phaser.GameObjects.GameObject) {console.log("*")
         const coin = o2 as Phaser.Physics.Arcade.Sprite
         this.coins.killAndHide(coin)
         coin.body.enable = false
-        console.log(++this.score)
+        this.mouse.score += 100
     }
 
     coinsCast() {
