@@ -45,12 +45,12 @@ export default class Game extends Phaser.Scene {
 
         this.bookc2se = this.add.image(Phaser.Math.Between(width, 2*width), height-350, Textures.Bookc2se)
 
-        // beware of the dog
-        this.dog = this.physics.add.staticSprite(Phaser.Math.Between(3*width, 5*width), height-96, Textures.Dog)
+        // beware of the bad dog
+        this.dog = this.physics.add.staticSprite(Phaser.Math.Between(5*width, 9*width), height-96, Textures.Dog)
 
-        this.cat = this.physics.add.staticSprite(this.bookc1se.x, 152, Textures.Cat) // let the cat be
+        this.cat = this.physics.add.staticSprite(this.bookc1se.x, 152, Textures.Cat) // let the angry cat be
 
-        this.cheese = this.physics.add.staticSprite(Phaser.Math.Between(width, 3*width), height-64, Textures.Cheese)
+        this.cheese = this.physics.add.staticSprite(Phaser.Math.Between(2*width, 3*width), height-64, Textures.Cheese)
                                         .setScale(0.5)
 
         // const mouse = this.physics.add.sprite(width/3, height-48, Textures.RocketMouse,
