@@ -8,6 +8,7 @@ Lot of things from mind 2 code
 
 ## Todo
 
-* Kick of energy from cheese
-* Cat on bookcase
-* Dog on floor
+* Why are coins kiling the Rocket Mouse? []
+* Kick of energy from cheese [x]
+* Cat on bookcase [x]
+* Dog on floor [x]

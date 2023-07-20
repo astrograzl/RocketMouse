@@ -48,8 +48,7 @@ export default class Game extends Phaser.Scene {
         // beware of the dog
         this.dog = this.physics.add.staticSprite(Phaser.Math.Between(3*width, 5*width), height-96, Textures.Dog)
 
-        // let the cat be
-        this.cat = this.physics.add.staticSprite(this.bookc1se.x, 152, Textures.Cat)
+        this.cat = this.physics.add.staticSprite(this.bookc1se.x, 152, Textures.Cat) // let the cat be
 
         this.cheese = this.physics.add.staticSprite(Phaser.Math.Between(width, 3*width), height-64, Textures.Cheese)
                                         .setScale(0.5)
@@ -90,14 +89,14 @@ export default class Game extends Phaser.Scene {
         const mouse = o1 as RocketMouse
         const coin = o2 as Phaser.Physics.Arcade.Sprite
         this.coins.killAndHide(coin)
-        coin.disableBody()
+        coin.body.enable = false
         mouse.score += 100
     }
 
     feedme(o1: Phaser.GameObjects.GameObject, o2: Phaser.GameObjects.GameObject) {console.log("@")
         const mouse = o1 as RocketMouse
-        const cheese = o2 as Phaser.Physics.Arcade.Sprite
         const body = mouse.body as Phaser.Physics.Arcade.Body
+        const cheese = o2 as Phaser.Physics.Arcade.Sprite
         body.setVelocityX(body.velocity.x + 100)
         cheese.setVisible(false)
         cheese.disableBody()
@@ -106,13 +105,19 @@ export default class Game extends Phaser.Scene {
 
     bark(o1: Phaser.GameObjects.GameObject, o2: Phaser.GameObjects.GameObject) {console.log("#")
         const mouse = o1 as RocketMouse
+        const body = mouse.body as Phaser.Physics.Arcade.Body
         const dog = o2 as Phaser.Physics.Arcade.Sprite
+        body.setVelocityX(body.velocity.x - 10)
+        dog.toggleFlipX()
         mouse.score -= 10
     }
 
     meow(o1: Phaser.GameObjects.GameObject, o2: Phaser.GameObjects.GameObject) {console.log("%")
         const mouse = o1 as RocketMouse
+        const body = mouse.body as Phaser.Physics.Arcade.Body
         const cat = o2 as Phaser.Physics.Arcade.Sprite
+        body.setVelocityX(body.velocity.x + 10)
+        cat.toggleFlipX()
         mouse.score += 10
     }
 
@@ -143,10 +148,12 @@ export default class Game extends Phaser.Scene {
     wall() {
         const camX = this.cameras.main.scrollX
         const {width, height} = this.scale
-        const offset = camX - width
+        const offset = camX - width/2
 
-        if (this.mouseHole.x < offset)
+        if (this.mouseHole.x < offset) {
             this.mouseHole.x = Phaser.Math.Between(camX + width, camX + 2*width)
+            this.coinsCast()
+        }
         
         if (this.w1ndow.x < offset) {
             this.w1ndow.x = Phaser.Math.Between(this.w2ndow.x + width, this.w2ndow.x + 2*width)
@@ -170,7 +177,6 @@ export default class Game extends Phaser.Scene {
 
         if (this.bookc2se.x < offset) {
             this.bookc2se.x = Phaser.Math.Between(this.bookc1se.x + width, this.bookc1se.x + 2*width)
-            this.coinsCast()
         }
 
         if (this.cheese.x < offset) { // Michalson Lucky Number
