@@ -6,8 +6,8 @@ export default class RocketMouse extends Phaser.GameObjects.Container {
     private cursor: Phaser.Types.Input.Keyboard.CursorKeys
     private flames: Phaser.GameObjects.Sprite
     private mouse: Phaser.GameObjects.Sprite
+    private label: Phaser.GameObjects.Text
     private being = Mouse.Running
-    /* TODO: private energy: number */
     public score = 1000
 
     constructor(scene: Phaser.Scene, x: number, y: number) {
@@ -16,6 +16,8 @@ export default class RocketMouse extends Phaser.GameObjects.Container {
         this.cursor = scene.input.keyboard.createCursorKeys()
         this.flames = scene.add.sprite(-63, -15, Textures.RocketMouse).play(Animes.Jet)
         this.mouse = scene.add.sprite(0, 0, Textures.RocketMouse).play(Animes.Run).setOrigin(0.5, 1)
+        this.label = scene.add.text(-this.mouse.width, -this.mouse.height, String(this.score),
+            {color: "#FF0000", fontSize: "48px"})
         const body = this.body as Phaser.Physics.Arcade.Body
         body.setSize(this.mouse.width/2, this.mouse.height/2)
         body.setOffset(-this.mouse.width/4, -2*this.mouse.height/3)
@@ -23,12 +25,13 @@ export default class RocketMouse extends Phaser.GameObjects.Container {
         body.setVelocityX(512) // run
         this.add(this.flames)
         this.add(this.mouse)
+        this.add(this.label)
         this.jetpack(false)
     }
 
     jetpack(on: boolean) {
         const body = this.body as Phaser.Physics.Arcade.Body
-        if (on && this.score > 0) {
+        if (on && this.score > 0) {console.log("&")
             body.setAcceleration(128, -512)
             this.mouse.play(Animes.Fly, true)
             this.flames.setVisible(true)
@@ -50,11 +53,13 @@ export default class RocketMouse extends Phaser.GameObjects.Container {
     }
 
     preUpdate() {
+        // this.text = String(this.score)
+        this.label.setText(String(this.score))
         const body = this.body as Phaser.Physics.Arcade.Body        
         switch (this.being) {
             case Mouse.Dead: { // Let dead rest in peace
-                // this.scene.scene.stop(Scenes.Game)
                 this.scene.scene.run(Scenes.GameOver)
+                this.scene.scene.pause(Scenes.Game)
             } break /* FIXME */
             
             case Mouse.Killed: {

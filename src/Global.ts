@@ -23,9 +23,12 @@ enum Textures {
     Bookc2se = "bookc2se",
     W1ndow = "w1ndow",
     W2ndow = "w2ndow",
+    Cheese = "cheese",
     Laser = "laser",
     Stop = "stop",
     Coin = "coin",
+    Cat = "cat",
+    Dog = "dog",
 }
 
 enum Mouse {
